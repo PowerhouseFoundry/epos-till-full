@@ -1,0 +1,11 @@
+.grid {
+  display: grid;
+  /* 4 columns on iPad landscape; tweak as needed */
+  grid-template-columns: repeat(4, 1fr);
+  /* fixed row height so buttons are uniform */
+  grid-auto-rows: minmax(100px, 1fr);
+  gap: 1rem;
+  padding: 1rem;
+  flex: 1;               /* allow grid to fill left side */
+  overflow-y: auto;      /* scroll only _inside_ the grid if you must */
+}
