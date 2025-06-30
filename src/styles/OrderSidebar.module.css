@@ -1,1 +1,49 @@
-.sidebar { width:300px; background:#111; padding:1rem; overflow-y:auto;} ul{list-style:none;padding:0;} li{margin-bottom:0.5rem;}
+/* src/styles/OrderSidebar.module.css */
+.sidebar {
+  width: 100%;        /* fills its grid column exactly */
+  max-width: 300px;   /* cap width so it never overflows */
+  box-sizing: border-box;
+  background: #222;
+  color: #fff;
+  padding: 0.5rem;
+  display: flex;
+  flex-direction: column;
+  overflow-y: auto;
+  overflow-x: hidden; /* prevent sideways scroll */
+}
+
+.list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  flex: 1;
+  overflow-y: auto;
+}
+
+.line {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 0.25rem;
+}
+
+.total {
+  margin-top: 0.5rem;
+  font-weight: bold;
+  text-align: right;
+}
+
+.buttons {
+  display: flex;
+  gap: 0.5rem;
+  margin-top: 0.5rem;
+}
+
+.buttons button {
+  flex: 1;
+  background: #444;
+  color: #fff;
+  border: none;
+  padding: 0.5rem 0;
+  font-size: 0.9rem;
+  cursor: pointer;
+}

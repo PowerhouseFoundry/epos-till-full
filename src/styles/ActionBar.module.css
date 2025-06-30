@@ -1,1 +1,16 @@
-.bar { background:#222; display:flex; justify-content:space-around; padding:0.5rem 0;} button{background:#444;border:none;color:white;padding:0.5rem 1rem;}
+.bar {
+  background: #222;
+  display: flex;
+  justify-content: space-around;
+  padding: 0.25rem 0;
+}
+
+.bar button {
+  flex: 1;
+  margin: 0 0.25rem;
+  font-size: 0.85rem;
+  padding: 0.5rem 0;
+  background: #444;
+  border: none;
+  color: white;
+}

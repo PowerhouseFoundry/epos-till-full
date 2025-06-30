@@ -1,50 +1,56 @@
 // src/App.js
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import MainPage     from './components/MainPage';
 import PaymentModal from './components/PaymentModal';
 import Receipt      from './components/Receipt';
+import LockScreen   from './components/LockScreen';
 import './styles/index.css';
 
 function App() {
-  // View state: either show categories or show items for a category
+  const [loggedIn, setLoggedIn] = useState(false);
   const [view, setView] = useState({ type: 'categories' });
-  // Basket state: list of { item, modifiers }
   const [orderItems, setOrderItems] = useState([]);
-  // Payment / receipt toggles
   const [showPayment, setShowPayment] = useState(false);
   const [showReceipt, setShowReceipt] = useState(false);
 
-  // NEW: go back to the category list
-  const handleBack = () => {
-    setView({ type: 'categories' });
-  };
+  // lock after 20s of no interaction
+  useEffect(() => {
+    if (!loggedIn) return;
+    let timer = setTimeout(() => setLoggedIn(false), 20000);
+    const reset = () => {
+      clearTimeout(timer);
+      timer = setTimeout(() => setLoggedIn(false), 20000);
+    };
+    window.addEventListener('mousemove', reset);
+    window.addEventListener('keydown', reset);
+    window.addEventListener('touchstart', reset);
+    return () => {
+      clearTimeout(timer);
+      window.removeEventListener('mousemove', reset);
+      window.removeEventListener('keydown', reset);
+      window.removeEventListener('touchstart', reset);
+    };
+  }, [loggedIn]);
 
-  // Handlers for navigation and basket operations
-  const handleSelectCategory = categoryId => {
-    setView({ type: 'items', categoryId });
-  };
-  const handleAddItem = (item, modifiers) => {
-    setOrderItems([...orderItems, { item, modifiers }]);
-  };
-  const handleVoidLast = () => {
-    setOrderItems(orderItems.slice(0, -1));
-  };
-  const handleClearAll = () => {
-    setOrderItems([]);
-  };
-  const handlePay = () => {
-    setShowPayment(true);
-  };
-  const handlePaymentComplete = () => {
-    setShowPayment(false);
-    setShowReceipt(true);
-  };
-  const handleFinish = () => {
+  // Handlers
+  const handleUnlock     = () => setLoggedIn(true);
+  const handleBack       = () => setView({ type: 'categories' });
+  const handleSelectCat  = id => setView({ type: 'items', categoryId: id });
+  const handleAddItem    = (item, mods) => setOrderItems([...orderItems, { item, mods }]);
+  const handleVoidLast   = () => setOrderItems(orderItems.slice(0, -1));
+  const handleClearAll   = () => setOrderItems([]);
+  const handlePay        = () => setShowPayment(true);
+  const handlePayDone    = () => { setShowPayment(false); setShowReceipt(true); };
+  const handleFinish     = () => {
     setShowReceipt(false);
     setOrderItems([]);
     setView({ type: 'categories' });
   };
+
+  if (!loggedIn) {
+    return <LockScreen onUnlock={handleUnlock} />;
+  }
 
   return (
     <>
@@ -52,7 +58,7 @@ function App() {
         <MainPage
           view={view}
           onBack={handleBack}
-          onSelectCategory={handleSelectCategory}
+          onSelectCategory={handleSelectCat}
           onAddItem={handleAddItem}
           orderItems={orderItems}
           onVoidLast={handleVoidLast}
@@ -61,17 +67,9 @@ function App() {
         />
       )}
       {showPayment && (
-        <PaymentModal
-          onCancel={() => setShowPayment(false)}
-          onComplete={handlePaymentComplete}
-        />
+        <PaymentModal onCancel={() => setShowPayment(false)} onComplete={handlePayDone} />
       )}
-      {showReceipt && (
-        <Receipt
-          orderItems={orderItems}
-          onFinish={handleFinish}
-        />
-      )}
+      {showReceipt && <Receipt orderItems={orderItems} onFinish={handleFinish} />}
     </>
   );
 }

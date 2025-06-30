@@ -1,12 +1,59 @@
+/* src/styles/MainPage.module.css */
 .container {
   display: flex;
   flex-direction: column;
   height: 100vh;
   margin: 0;
+  overflow: hidden;
+}
+
+.backButton {
+  background: #444;
+  color: #fff;
+  border: none;
+  padding: 0.5rem 1rem;
+  margin: 0.5rem;
+  cursor: pointer;
 }
 
 .mainArea {
-  display: flex;        /* keep category/items and sidebar side-by-side */
-  flex: 1;              /* fill all remaining height */
-  overflow: hidden;     /* prevent the whole page from scrolling */
+  display: grid;
+  grid-template-columns: 1fr 1fr  /* two equal columns on tablet */;
+                       /* left=items, right=sidebar */
+                       ;
+  flex: 1;
+  overflow: hidden;
+}
+
+/* ensure items grid fills left side */
+.itemsArea {
+  overflow-y: auto;
+  padding: 0.5rem;
+}
+
+/* sidebar fixed, no horizontal scroll */
+.sidebarArea {
+  border-left: 1px solid #333;
+  background: #222;
+  overflow-y: auto;
+  overflow-x: hidden;
+  padding: 0.5rem;
+}
+
+/* adjust for smaller screens */
+@media only screen and (max-width: 1024px) {
+  .mainArea {
+    grid-template-columns: 3fr 1fr;
+  }
+}
+
+@media only screen and (max-width: 768px) {
+  .mainArea {
+    grid-template-columns: 4fr 1fr;
+  }
+}
+
+/* reduce sidebar font and spacing for iPad */
+.sidebarArea {
+  font-size: 0.85rem;
 }

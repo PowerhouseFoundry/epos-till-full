@@ -1,16 +1,41 @@
+// src/components/Receipt.js
 import React from 'react';
 import styles from '../styles/Receipt.module.css';
 
 export default function Receipt({ orderItems, onFinish }) {
-  const total = orderItems.reduce((sum, oi) => sum + oi.item.price + oi.modifiers.price, 0);
+  const total = orderItems.reduce((sum, entry) => {
+    const itemPrice = entry.item?.price || 0;
+    const modPrice  = entry.modifiers?.price || 0;
+    return sum + itemPrice + modPrice;
+  }, 0);
+
   return (
-    <div className={styles.receipt}>
-      <h2>Thank You!</h2>
-      <ul>
-        {orderItems.map((oi,i)=> <li key={i}>{oi.item.name} {oi.modifiers.label} - £{(oi.item.price+oi.modifiers.price).toFixed(2)}</li>)}
+    <div className={styles.container}>
+      <h2>Receipt</h2>
+      <ul className={styles.list}>
+        {orderItems.map((entry, idx) => {
+          const name       = entry.item?.name || '';
+          const price      = entry.item?.price  || 0;
+          const modLabel   = entry.modifiers?.label || '';
+          const modPrice   = entry.modifiers?.price || 0;
+          return (
+            <li key={idx} className={styles.line}>
+              <span>
+                {name}{modLabel && ` (${modLabel})`}
+              </span>
+              <span>
+                £{(price + modPrice).toFixed(2)}
+              </span>
+            </li>
+          );
+        })}
       </ul>
-      <h3>Total Paid: £{total.toFixed(2)}</h3>
-      <button onClick={onFinish}>New Order</button>
+      <div className={styles.total}>
+        Total: £{total.toFixed(2)}
+      </div>
+      <button onClick={onFinish} className={styles.button}>
+        Finish
+      </button>
     </div>
   );
 }

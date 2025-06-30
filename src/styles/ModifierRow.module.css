@@ -1,1 +1,13 @@
-.row { display:flex; gap:0.5rem; padding:0 1rem;} button{background:#555;border:none;color:white;padding:0.5rem;}
+.row {
+  display: flex;
+  gap: 0.25rem;
+  justify-content: center;
+}
+.row button {
+  font-size: 0.7rem;
+  padding: 0.25rem 0.5rem;
+  background: #c0392b;
+  border: none;
+  color: white;
+  white-space: nowrap;
+}
